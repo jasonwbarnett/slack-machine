@@ -95,7 +95,7 @@ class SlackClient:
             elif event["type"] == "member_joined_channel":
                 await self._on_member_joined_channel(event)
 
-    async def fetch_paginated_data(
+    async def _fetch_paginated_data(
         self,
         client_method: Callable[..., Awaitable[AsyncSlackResponse]],
         data_key: str,
@@ -135,7 +135,7 @@ class SlackClient:
         (Web API Tier 2). This means if you have more than 20,000 users the
         cache may take over a minute to build.
         """
-        async for user in self.fetch_paginated_data(
+        async for user in self._fetch_paginated_data(
             client_method=self._client.web_client.users_list,
             data_key="members",
             logger_label="users",
@@ -155,7 +155,7 @@ class SlackClient:
         (Web API Tier 2). This means if you have more than 20,000 channels the
         cache may take over a minute to build.
         """
-        async for channel in self.fetch_paginated_data(
+        async for channel in self._fetch_paginated_data(
             client_method=self._client.web_client.conversations_list,
             data_key="channels",
             logger_label="channels",
